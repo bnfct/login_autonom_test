@@ -1,4 +1,7 @@
 <?php
+//A sok adat miatt növeltük a PHP memória limitét ideiglenesen
+ini_set('memory_limit', '1024M');
+
 include_once("TableModel.php");
 
 //melyik táblát akarjuk kezelni
@@ -28,8 +31,10 @@ $results = $model->getEmployeeData();
     <head>
         <title>Login Autonom (teszt feladat)</title>
     </head>
+    <link rel="stylesheet" type="text/css" href="vendor/datatables.min.css"/>
+    <script type="text/javascript" src="vendor/datatables.min.js"></script>
     <body>
-        <table>
+        <table id="employees">
             <thead>
                 <th>Employee ID</th>
                 <th>Birth date</th>
@@ -58,4 +63,13 @@ $results = $model->getEmployeeData();
             </tbody>
         </table>
     </body>
+    <script>
+        $(document).ready(function() {
+            $('#employees').DataTable(
+                {
+                    "pageLength": 20
+                }
+            );
+        } );
+    </script>
 </html>
