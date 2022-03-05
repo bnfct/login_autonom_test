@@ -21,6 +21,14 @@ class TableModel {
         return $conn;
     }
 
+    //ez a függvény adja vissza a kombinált adatokat a dolgozókról
+    public function getEmployeeData($sel=array()) {
+        $conn = $this->get_connection();
+        $query = $conn->prepare("SELECT employees.emp_no, employees.birth_date, employees.first_name, employees.last_name, employees.gender, titles.title, salaries.salary, dept_emp.dept_name FROM employees INNER JOIN titles ON employees.emp_no = titles.emp_no JOIN (SELECT from_date, salary, emp_no FROM salaries A WHERE from_date = (SELECT Max(from_date) FROM salaries B WHERE A.emp_no = B.emp_no)) salaries ON employees.emp_no = salaries.emp_no JOIN (SELECT departments.dept_name, dept_emp.emp_no FROM dept_emp INNER JOIN departments ON dept_emp.dept_no = departments.dept_no) dept_emp ON employees.emp_no = dept_emp.emp_no GROUP BY employees.emp_no LIMIT 1000");
+        $query->execute([]);
+        return $query->fetchAll();
+    }
+
     //Ezzel a funkcióval az adott táblának az összes oszlopát és adatát kitudjuk nyerni
     public function getAllRecords($sel=array()) {
         $conn = $this->get_connection();
